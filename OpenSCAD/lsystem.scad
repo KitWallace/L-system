@@ -1,4 +1,4 @@
-use <tile.scad>
+use <../lib/tile.scad>
 /*
   L-system (Lindenmayer) 
     symbols  
@@ -12,17 +12,14 @@ use <tile.scad>
   
   kit wallace Nov 2019 
   with thanks to Ronaldo and the Openscad Forum
+  
+  add scaling factors
+  reverse()
+  mirror()
+  pop/push
+  move
 */
 
-
-ci=17;
-k=1;
-
-width=0.2;
-scale= 1.5;
-align=0;
-
-$fn=12;
 
 function find(key, list) =
       list[search([key],list)[0]]  ;
@@ -83,11 +80,17 @@ module path(points,width,closed=false) {
       } 
     }
 };
+
+module tile(points) {
+    polygon(points);    
+} 
+
 /* curve directory entry structure
    0 - name
    1 - axiom
    2 - rules
    3 - angle in degrees
+   4 - increase in size between generations
 */
 curves =[
    ["Dragon",
@@ -98,6 +101,42 @@ curves =[
    ],
    90],
 
+   ["Twin Dragon",
+   "FX+FX+",
+   [
+     ["X","X+YF"],
+     ["Y","FX-Y"]
+   ],
+   90],
+   
+   ["Terdragon",
+   "F",
+   [
+     ["F","F+F-F"]
+   ],
+   120],
+   
+   ["Terdragon boundary",
+    "A-B--A-B--",
+    [["A","A+B"],
+     ["B","A-B"]
+     ],
+     60
+     ],
+     
+   ["McWorter's Pentigree",
+    "F",
+    [["F","+F++F----F--F++F++F-"]],
+     36
+     ],
+
+    ["Fudgeflake",
+     "FX++++FX++++FX",
+    [["X","-FY++FX-"],
+     ["Y","+FY--FX+"]
+    ],
+     30],
+   
    ["Moore",
     "LFL+F+LFL",
     [
@@ -106,7 +145,7 @@ curves =[
     ],
     90],
     
-   ["Sierpinski Arrowhead",
+   ["Sierpinski Arrowhead, Sierpinksi Gasket",
      "A",
      [
        ["A", "B-A-B"],
@@ -120,9 +159,10 @@ curves =[
        ["X","-YF+XFX+FY-"],
        ["Y","+XF-YFY-FX+"]
      ],
-     90],
+     90,
+     3],
      
-   ["Peano-Gosper",
+   ["Peano-Gosper;FlowSnake",
       "A",
      [
        ["A","A-B--B+A++AA+B-"],
@@ -145,7 +185,17 @@ curves =[
         ["Y","YFXFY-F-XFYFX+F+YFXFY"]
        ],
        90],
- 
+       
+    ["Peano Curved",
+       "X",
+       [
+        ["X","XFYFXRFRYFXFYLFLXFYFX"],
+        ["Y","YFXFYLFLXFYFXRFRYFXFY"],
+        ["R","F+F+F+F+"],
+        ["L","F-F-F-F-"]
+       ],
+       22.5],
+
    ["Koch snowflake",
        "F++F++F",
        [["F","F-F++F-F"]],
@@ -171,11 +221,36 @@ curves =[
         [["F","F-F+F"]],
         120],
         
-   ["Paul Bourke Crystal",
+   ["ABP Koch a",
+         "F+F+F+F",
+         [["F","FF+F+F+F+F+F-F"]],
+        90],
+ 
+   ["ABP Koch b",
+         "F+F+F+F",
+         [["F","FF+F+F+F+FF"]],
+        90],
+        
+   ["ABP Koch c",
+         "F+F+F+F",
+         [["F","FF+F-F+F+FF"]],
+        90],
+  
+   ["ABP Koch d",
          "F+F+F+F",
          [["F","FF+F++F+F"]],
         90],
+ 
+   ["ABP Koch e",
+         "F+F+F+F",
+         [["F","F+FF++F+F"]],
+        90],
         
+   ["ABP Koch f",
+         "F+F+F+F",
+         [["F","F+F-F+F+F"]],
+        90],
+ 
    ["Levy Curve",
          "F",
          [["F","-F++F-"]],
@@ -201,36 +276,55 @@ curves =[
     ["D","CFC--CFC"]],
     45
    ],
-    ["Bourke Simple",
+   
+    ["Quadratic Koch Island",
       "F-F-F-F-",
       [["F","F-F+F+FF-F-F+F"]],
     90
-    ]
+    ],
+     
+    ["Mandle",
+     "F++F++F++",
+     [["F","F+F--F+F"]],
+     60
+     ],
+     
+     ["Mandle6",
+     "F+F+F+F+F+F+",
+     [["F","F-F+F-F+F"]],
+     60
+     ],
+     
+     ["tsq",
+      "FRFRFRFR",
+      [["R","+F+F+F+F"]],
+      22.5
+      ],
+      
+      ["Square Koch tile - out",
+       "F--F--F--F--",
+       [["F","F+F--F+F"]],
+       45,
+       2+2*cos(45)],
+       
+      ["Square Koch tile - in",
+       "F--F--F--F--",
+       [["F","F-F++F-F"]],
+       45,
+       2+2*cos(45)],
    ];
 
-for (i=[0:len( curves)-1])
+
+function l_system(ci,k=1,step=1) =
+  let(curve=curves[ci])
+  let(name=curve[0])
+  let(axiom=curve[1])
+  let(rules=curve[2])
+  let(angle=curve[3])
+  let(sentence=gen(axiom,rules,k))
+  string_to_points(sentence,step=step,angle=angle);
+  
+module index() { 
+  for (i=[0:len( curves)-1])
     echo(i,curves[i][0]); 
-
-curve=curves[ci];
-echo(curve);
-echo("k",k);
-
-name=curve[0];
-axiom=curve[1];
-rules=curve[2];
-angle=curve[3];
-
-sentence=gen(axiom,rules,k);
-//echo(sentence);
-echo("sentence length",len(sentence));
-
-points = string_to_points(sentence,step=1,angle=angle);
-//echo(points);
-echo("curve length", len(points)-1);
-
-rotate([0,0,align])
-  color("red")
-  scale(scale)
-    path(centre_tile(points),width=width);
-
-// fill_tile(centre_tile(points));
+};
