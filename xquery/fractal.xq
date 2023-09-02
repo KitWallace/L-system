@@ -7,6 +7,7 @@ declare function local:index() {
    return 
    <tr>
      <td><a href="?name={$fractal/name[1]}&amp;generations=2">{$fractal/name[1]}</a></td>
+     <td>aka {string-join(subsequence($fractal/name,2),", ")}</td
      <td>{if ($fractal/isclosed) then "Closed" else "Open"}</td>
    </tr>
   }
