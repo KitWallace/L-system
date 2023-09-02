@@ -1,0 +1,486 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fractals>
+    <fractal>
+        <name>Dragon Curve</name>
+        <source>https://en.wikipedia.org/wiki/Dragon_curve</source>
+        <axiom>FX</axiom>
+        <rules>
+            <rule replace="X" with="X+YF+"/>
+            <rule replace="Y" with="-FX-Y"/>
+        </rules>
+        <angle>90</angle>
+        <forward-symbols>F</forward-symbols>
+    </fractal>
+    <fractal>
+        <name>Dragon Curve: 3</name>
+        <source>http://larryriddle.agnesscott.org/ifs/heighway/heighway.htm</source>
+        <axiom>FX</axiom>
+        <rules>
+            <rule replace="F" with=""/>
+            <rule replace="X" with="+FX--FY+"/>
+            <rule replace="Y" with="-FX++FY-"/>
+        </rules>
+        <angle>45</angle>
+        <forward-symbols>F</forward-symbols>
+    </fractal>
+    <fractal>
+        <name>Twin Dragon</name>
+        <axiom>FX+FX+</axiom>
+        <rules>
+            <rule replace="X" with="X+YF"/>
+            <rule replace="Y" with="FX-Y"/>
+        </rules>
+        <angle>90</angle>
+        <forward-symbols>F</forward-symbols>
+        <isclosed/>
+    </fractal>
+    <fractal>
+        <name>Terdragon</name>
+        <axiom>F</axiom>
+        <rules>
+            <rule replace="F" with="F+F-F"/>
+        </rules>
+        <angle>120</angle>
+        <forward-symbols>F</forward-symbols>
+    </fractal>
+    <fractal>
+        <name>Terdragon Boundary</name>
+        <axiom>A-B--A-B--</axiom>
+        <rules>
+            <rule replace="A" with="A+B"/>
+            <rule replace="B" with="A-B"/>
+        </rules>
+        <angle>60</angle>
+        <forward-symbols>AB</forward-symbols>
+        <isclosed/>
+    </fractal>
+    <fractal>
+        <name>McWorter's Pentigree</name>
+        <axiom>F</axiom>
+        <rules>
+            <rule replace="F" with="+F++F----F--F++F++F-"/>
+        </rules>
+        <angle>36</angle>
+        <forward-symbols>F</forward-symbols>
+    </fractal>
+    <fractal>
+        <name>Fudgeflake</name>
+        <axiom>FX++++FX++++FX</axiom>
+        <rules>
+            <rule replace="X" with="-FY++FX-"/>
+            <rule replace="Y" with="+FY--FX+"/>
+        </rules>
+        <angle>30</angle>
+        <forward-symbols>F</forward-symbols>
+        <isclosed/>
+    </fractal>
+    <fractal>
+        <name>Moore</name>
+        <axiom>LFL+F+LFL</axiom>
+        <rules>
+            <rule replace="L" with="-RF+LFL+FR-"/>
+            <rule replace="R" with="+LF-RFR-FL+"/>
+        </rules>
+        <angle>90</angle>
+        <forward-symbols>F</forward-symbols>
+        <isclosed/>
+    </fractal>
+    <fractal>
+        <name>Hilbert</name>
+        <axiom>X</axiom>
+        <rules>
+            <rule replace="X" with="-YF+XFX+FY-"/>
+            <rule replace="Y" with="+XF-YFY-FX+"/>
+        </rules>
+        <angle>90</angle>
+        <forward-symbols>F</forward-symbols>
+    </fractal>
+    <fractal>
+        <name>Gosper Curve</name>
+        <name>Flowsnake</name>
+        <name>Peano-Gosper Curve</name>
+        <axiom>A</axiom>
+        <rules>
+            <rule replace="A" with="A-B--B+A++AA+B-"/>
+            <rule replace="B" with="+A-BB--B-A++A+B"/>
+        </rules>
+        <angle>60</angle>
+        <forward-symbols>AB</forward-symbols>
+    </fractal>
+    <fractal>
+        <name>Inner-flip Gosper</name>
+        <axiom>A</axiom>
+        <rules>
+            <rule replace="A" with="A-FB--FB-F++AF++A-F+AF+B-"/>
+            <rule replace="B" with="+A-FB-F+B--FB--F+AF++AF+B"/>
+        </rules>
+        <angle>60</angle>
+        <forward-symbols>F</forward-symbols>
+    </fractal>
+    <fractal>
+        <name>Peano Curve</name>
+        <axiom>X</axiom>
+        <rules>
+            <rule replace="X" with="XFYFX+F+YFXFY-F-XFYFX"/>
+            <rule replace="Y" with="YFXFY-F-XFYFX+F+YFXFY"/>
+        </rules>
+        <angle>90</angle>
+        <forward-symbols>F</forward-symbols>
+    </fractal>
+    <fractal>
+        <name>Peano Curve Octagonal</name>
+        <source>https://tecnoloxia.org/100hex/product/peano-curve/</source>
+        <axiom>FX</axiom>
+        <rules>
+            <rule replace="F" with=""/>
+            <rule replace="X" with="FX-FY-FX+FY+FX+FY+FX+FY+FX-FY-FX-FY-FX-FY-FX+FY+FX"/>
+            <rule replace="Y" with="FY"/>
+        </rules>
+        <angle>45</angle>
+        <forward-symbols>F</forward-symbols>
+    </fractal>
+    <fractal>
+        <name>Peano Curve Variation</name>
+        <source>https://tecnoloxia.org/100hex/product/peano-variacion/</source>
+        <axiom>F</axiom>
+        <rules>
+            <rule replace="F" with="F+F-F-F-G+F+F+F-F"/>
+            <rule replace="G" with="FFF"/>
+        </rules>
+        <angle>90</angle>
+        <forward-symbols>F</forward-symbols>
+    </fractal>
+    <fractal>
+        <name>Sierpinski Curve</name>
+        <axiom>F--XF--F--X</axiom>
+        <rules>
+            <rule replace="X" with="XF+F+XF--F--XF+F+X"/>
+        </rules>
+        <angle>45</angle>
+        <forward-symbols>F</forward-symbols>
+        <isclosed/>
+    </fractal>
+    <fractal>
+        <name>Sierpinski Curve Rounded</name>
+        <axiom>X--F--X--</axiom>
+        <rules>
+            <rule replace="X" with="+Y-F-Y+"/>
+            <rule replace="Y" with="-X+F+X-"/>
+        </rules>
+        <angle>45</angle>
+        <forward-symbols>F</forward-symbols>
+        <isclosed/>
+    </fractal>
+    <fractal>
+        <name>Sierpinski Arrowhead</name>
+        <axiom>A</axiom>
+        <rules>
+            <rule replace="A" with="B-A-B"/>
+            <rule replace="B" with="A+B+A"/>
+        </rules>
+        <angle>60</angle>
+        <forward-symbols>AB</forward-symbols>
+    </fractal>
+    <fractal>
+        <name>Sierpinski Arrowhead Hex</name>
+        <axiom>A-A-A-A-A-A</axiom>
+        <rules>
+            <rule replace="A" with="B-A-B"/>
+            <rule replace="B" with="A+B+A"/>
+        </rules>
+        <angle>60</angle>
+        <forward-symbols>AB</forward-symbols>
+        <isclosed/>
+    </fractal>
+    <fractal>
+        <name>Sierpinski Arrowhead Anti-Hex</name>
+        <axiom>A+A+A+A+A+A</axiom>
+        <rules>
+            <rule replace="A" with="B-A-B"/>
+            <rule replace="B" with="A+B+A"/>
+        </rules>
+        <angle>60</angle>
+        <forward-symbols>AB</forward-symbols>
+        <isclosed/>
+    </fractal>
+    <fractal>
+        <name>Sierpinski Triangle</name>
+        <axiom>A-B-B</axiom>
+        <rules>
+            <rule replace="A" with="A-B+A+B-A"/>
+            <rule replace="B" with="BB"/>
+        </rules>
+        <angle>120</angle>
+        <forward-symbols>AB</forward-symbols>
+        <isclosed/>
+    </fractal>
+    <fractal>
+        <name>Sierpinski Square</name>
+        <axiom>F+XF+F+X</axiom>
+        <rules>
+            <rule replace="X" with="XF-F+F-XF+F+XF-F+F-X"/>
+        </rules>
+        <angle>90</angle>
+        <forward-symbols>F</forward-symbols>
+        <isclosed/>
+    </fractal>
+    <fractal>
+        <name>Levy Curve</name>
+        <axiom>F</axiom>
+        <rules>
+            <rule replace="F" with="-F++F-"/>
+        </rules>
+        <angle>45</angle>
+        <forward-symbols>F</forward-symbols>
+    </fractal>
+    <fractal>
+        <name>Cesaro Curve</name>
+        <axiom>F</axiom>
+        <rules>
+            <rule replace="F" with="F+F--F+F"/>
+        </rules>
+        <angle>85</angle>
+        <forward-symbols>F</forward-symbols>
+    </fractal>
+    <fractal>
+        <name>Minkowski Sausage</name>
+        <name>Quadratic Koch Island</name>
+        <axiom>F+F+F+F+</axiom>
+        <rules>
+            <rule replace="F" with="F+F-F-FF+F+F-F"/>
+        </rules>
+        <angle>90</angle>
+        <forward-symbols>F</forward-symbols>
+        <isclosed/>
+    </fractal>
+    <fractal>
+        <name>Paul Bourke Triangle</name>
+        <axiom>F+F+F</axiom>
+        <rules>
+            <rule replace="F" with="F-F+F"/>
+        </rules>
+        <angle>120</angle>
+        <forward-symbols>F</forward-symbols>
+    </fractal>
+    <fractal>
+        <name>Koch Snowflake</name>
+        <axiom>F++F++F</axiom>
+        <rules>
+            <rule replace="F" with="F-F++F-F"/>
+        </rules>
+        <angle>60</angle>
+        <forward-symbols>F</forward-symbols>
+        <isclosed/>
+    </fractal>
+    <fractal>
+        <name>Koch Anti-snowflake</name>
+        <axiom>F++F++F</axiom>
+        <rules>
+            <rule replace="F" with="F+F--F+F"/>
+        </rules>
+        <angle>60</angle>
+        <forward-symbols>F</forward-symbols>
+    </fractal>
+    <fractal>
+        <name>Koch Square</name>
+        <axiom>F--F--F--F--</axiom>
+        <rules>
+            <rule replace="F" with="F+F--F+F"/>
+        </rules>
+        <angle>45</angle>
+        <forward-symbols>F</forward-symbols>
+        <isclosed/>
+    </fractal>
+    <fractal>
+        <name>Anti Koch Square</name>
+        <axiom>F--F--F--F--</axiom>
+        <rules>
+            <rule replace="F" with="F-F++F-F"/>
+        </rules>
+        <angle>45</angle>
+        <forward-symbols>F</forward-symbols>
+        <isclosed/>
+    </fractal>
+    <fractal>
+        <name>ABP Koch A</name>
+        <axiom>F+F+F+F</axiom>
+        <rules>
+            <rule replace="F" with="FF+F+F+F+F+F-F"/>
+        </rules>
+        <angle>90</angle>
+        <forward-symbols>F</forward-symbols>
+        <isclosed/>
+    </fractal>
+    <fractal>
+        <name>ABP Koch B</name>
+        <axiom>F+F+F+F</axiom>
+        <rules>
+            <rule replace="F" with="FF+F+F+F+FF"/>
+        </rules>
+        <angle>90</angle>
+        <forward-symbols>F</forward-symbols>
+        <isclosed/>
+    </fractal>
+    <fractal>
+        <name>ABP Koch C</name>
+        <axiom>F+F+F+F</axiom>
+        <rules>
+            <rule replace="F" with="FF+F-F+F+FF"/>
+        </rules>
+        <angle>90</angle>
+        <forward-symbols>F</forward-symbols>
+        <isclosed/>
+    </fractal>
+    <fractal>
+        <name>ABP Koch D</name>
+        <axiom>F+F+F+F</axiom>
+        <rules>
+            <rule replace="F" with="FF+F++F+F"/>
+        </rules>
+        <angle>90</angle>
+        <forward-symbols>F</forward-symbols>
+        <isclosed/>
+    </fractal>
+    <fractal>
+        <name>ABP Koch E</name>
+        <axiom>F+F+F+F</axiom>
+        <rules>
+            <rule replace="F" with="F+FF++F+F"/>
+        </rules>
+        <angle>90</angle>
+        <forward-symbols>F</forward-symbols>
+        <isclosed/>
+    </fractal>
+    <fractal>
+        <name>ABP Koch F</name>
+        <axiom>F+F+F+F</axiom>
+        <rules>
+            <rule replace="F" with="F+F-F+F+F"/>
+        </rules>
+        <angle>90</angle>
+        <forward-symbols>F</forward-symbols>
+        <isclosed/>
+    </fractal>
+    <fractal>
+        <name>Mandle6</name>
+        <axiom>F+F+F+F+F+F+</axiom>
+        <rules>
+            <rule replace="F" with="F-F+F-F+F"/>
+        </rules>
+        <angle>60</angle>
+        <forward-symbols>F</forward-symbols>
+        <isclosed/>
+    </fractal>
+    <fractal>
+        <name>5-rep-tile</name>
+        <axiom>F-F-F-F-</axiom>
+        <rules>
+            <rule replace="F" with="F+F-F"/>
+        </rules>
+        <angle>90</angle>
+        <forward-symbols>F</forward-symbols>
+        <isclosed/>
+    </fractal>
+    <fractal>
+        <name>7-rep-tile</name>
+        <name>Gosper Island</name>
+        <axiom>F-F-F-F-F-F-</axiom>
+        <rules>
+            <rule replace="F" with="F+F-F"/>
+        </rules>
+        <angle>60</angle>
+        <forward-symbols>F</forward-symbols>
+        <isclosed/>
+    </fractal>
+    <fractal>
+        <name>Quadratic Gosper</name>
+        <axiom>-YF</axiom>
+        <rules>
+            <rule replace="Y" with="+FXFX-YF-YF+FX+FXYF+FX-YFYF-FX-YF+FXYFYF-FX-YFFX+FX+YF-YF-FX+FX+YFY"/>
+            <rule replace="X" with="XFX-YF-YF+FX+FX-YF-YFFX+YF+FXFXYF-FX+YF+FXFX+YF-FXYF-YF-FX+FX+YFYF-"/>
+        </rules>
+        <angle>90</angle>
+        <forward-symbols>F</forward-symbols>
+    </fractal>
+    <fractal>
+        <name>Anklets of Krishna</name>
+        <axiom>-X--X</axiom>
+        <rules>
+            <rule replace="X" with="XFX--XFX"/>
+        </rules>
+        <angle>45 </angle>
+        <forward-symbols>F</forward-symbols>
+        <isclosed/>
+    </fractal>
+    <fractal>
+        <name>Bourke Kolem</name>
+        <axiom>--D--D</axiom>
+        <rules>
+            <rule replace="X" with="F++FFFF--F--FFFF++F++FFFF--F"/>
+            <rule replace="Y" with="F--FFFF++F++FFFF--F--FFFF++F"/>
+            <rule replace="C" with="YFX--YFX"/>
+            <rule replace="D" with="CFC--CFC"/>
+        </rules>
+        <angle>45</angle>
+        <forward-symbols>F</forward-symbols>
+    </fractal>
+    <fractal>
+        <name>Greek Cross</name>
+        <axiom>F</axiom>
+        <rules>
+            <rule replace="F" with="FF+F+F+FF+F+F-F"/>
+        </rules>
+        <angle>90</angle>
+        <forward-symbols>F</forward-symbols>
+    </fractal>
+    <fractal>
+        <name>Plus Square</name>
+        <axiom>XYXYXYX+XYXYXYX+XYXYXYX+XYXYXYX+</axiom>
+        <rules>
+            <rule replace="X" with="FX+FX+FXFY-FY-"/>
+            <rule replace="Y" with="+FX+FXFY-FY-FY"/>
+            <rule replace="F" with=""/>
+        </rules>
+        <angle>90</angle>
+        <forward-symbols>F</forward-symbols>
+    </fractal>
+    <fractal>
+        <name>100hex maple leaf</name>
+        <axiom>F</axiom>
+        <rules>
+            <rule replace="F" with="F-F+F+FF-F-F+FF"/>
+        </rules>
+        <angle>120</angle>
+        <forward-symbols>F</forward-symbols>
+    </fractal>
+    <fractal>
+        <name>Burke1</name>
+        <axiom>F+F+FF+F+F+</axiom>
+        <rules>
+            <rule replace="F" with="F+F-F-FF+F+F-F"/>
+        </rules>
+        <angle>90</angle>
+        <forward-symbols>F</forward-symbols>
+        <isclosed/>
+    </fractal>
+    <fractal>
+        <name>LSystemBot1</name>
+        <axiom>DFF</axiom>
+        <rules>
+            <rule replace="F" with="D+D"/>
+            <rule replace="D" with="-FF---+FF"/>
+        </rules>
+        <angle>36</angle>
+        <forward-symbols>F</forward-symbols>
+    </fractal>
+    <fractal>
+        <name>LSystemBot2</name>
+        <axiom>FL</axiom>
+        <rules>
+            <rule replace="F" with="FFFFF+"/>
+            <rule replace="L" with="L+"/>
+        </rules>
+        <angle>45</angle>
+        <forward-symbols>F</forward-symbols>
+    </fractal>
+</fractals>
