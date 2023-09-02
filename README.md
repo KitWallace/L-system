@@ -1,7 +1,7 @@
 # L-system
 L-system fractals in several languages
 
-Only the basic L-sytsem symbols are used in this work F (forward) + (turn left) , - (turn right)   Adding the extended symbols listed in Paul Bourke's great work: https://paulbourke.net/fractals/lsys/ is an future project
+Only the basic L-system symbols are used in this work F (forward) ,+ (turn left), - (turn right) , draw anticlockise for historic reasons, are used at present.   Adding the extended symbols listed in Paul Bourke's great work: https://paulbourke.net/fractals/lsys/ is an future project
 
 The XQuery version is online here   https://kitwallace.co.uk/fractals/fractal.xq?
 
