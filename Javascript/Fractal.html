@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Fractal Curves</title>
+        <script src="jscripts/jquery-1.12.4.js" type="text/javascript"></script>
+        <script src="jscripts/jquery-ui.js" type="text/javascript"></script>
+        <link rel="stylesheet" type="text/css" href="assets/jquery-ui.css"/>
+        <link rel="stylesheet" type="text/css" href="assets/screen4.css" media="screen"/>
+        <script src="jscripts/controls.js" type="text/javascript"></script>
+        <script src="jscripts/basics.js" type="text/javascript"></script>
+        <script src="jscripts/fractal-defs.js" type="text/javascript"></script>
+        <script src="jscripts/fractal.js" type="text/javascript"></script>
+        <link href="assets/icon-64-64.png" rel="icon" sizes="64x64"/>
+    </head>
+    <body>
+        <h1>
+            <a target="_blank" href="index.html">Index</a>&#160;:&#160; <a href="?">Fractal Curves</a>
+        </h1>
+        <div>
+            <div id="left">
+                <table>
+                    <tr>
+                        <th>Fractal name</th>
+                        <td/>
+                        <td>
+                            <div id="select-fractal"></div>
+                        </td>
+                    </tr>
+                    <tbody id="def"></tbody>
+                    <tr>
+                        <th>#Generations</th>
+                        <td>
+                            <input type="text" size="3" id="gen" onchange="refresh()" value="2"/>
+                        </td>
+                        <td width="45%">
+                            <div class="slider" id="slidergen"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Scale</th>
+                        <td>
+                            <input type="text" id="scale" size="3" value="1" onchange="refresh()"/>
+                        </td>
+                        <td width="45%">
+                            <div class="slider" id="sliderscale"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>#points</th>
+                        <td>
+                            <span id="n-points"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Points</th>
+                        <td></td>
+                        <td>
+                            <textarea id="points" cols="60" rows="10"></textarea>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div id="svgframe">
+                <svg xmlns="http://www.w3.org/2000/svg" id="svgimage" width="800" height="800">
+                    <g id="canvas" transform="translate(50,20)"/>
+                </svg>
+            </div>
+        </div>
+    </body>
+</html>
