@@ -1,4 +1,3 @@
-use <../lib/tile.scad>
 /*
   L-system (Lindenmayer) 
     symbols  
