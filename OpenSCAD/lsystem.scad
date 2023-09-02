@@ -1,4 +1,3 @@
-use <tile.scad>
 /*
   L-system (Lindenmayer) 
     symbols  
@@ -12,14 +11,7 @@ use <tile.scad>
   
   kit wallace Nov 2019 
   with thanks to Ronaldo and the Openscad Forum
-  
-  add scaling factors
-  reverse()
-  mirror()
-  pop/push
-  move
 */
-
 
 function find(key, list) =
       list[search([key],list)[0]]  ;
@@ -84,7 +76,7 @@ module path(points,width,closed=false) {
 module tile(points) {
     polygon(points);    
 } 
-
+function curves() =
 /* curve directory entry structure
    0 - name
    1 - axiom
@@ -92,7 +84,7 @@ module tile(points) {
    3 - angle in degrees
    4 - increase in size between generations
 */
-curves =[
+ [
    ["Dragon",
    "FX",
    [
@@ -316,7 +308,7 @@ curves =[
 
 
 function l_system(ci,k=1,step=1) =
-  let(curve=curves[ci])
+  let(curve=curves()[ci])
   let(name=curve[0])
   let(axiom=curve[1])
   let(rules=curve[2])
@@ -325,6 +317,7 @@ function l_system(ci,k=1,step=1) =
   string_to_points(sentence,step=step,angle=angle);
   
 module index() { 
-  for (i=[0:len( curves)-1])
+  curves = curves();
+  for (i=[0:len(curves)-1])
     echo(i,curves[i][0]); 
 };
