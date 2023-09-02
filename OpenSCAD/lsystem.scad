@@ -1,67 +1,67 @@
+use <tile.scad>
 /*
   L-system (Lindenmayer) 
     symbols  
-       F (or user defined characters) forward step
+       F,A,B forward step
        + turn right angle
        - turn left angle
-       other symbols are ignored when rendering
+       other symbols are ignored
        
   see http://paulbourke.net/fractals/lsys/ 
     for a plethora of examples
   
   kit wallace Nov 2019 
   with thanks to Ronaldo and the Openscad Forum
-  
-  Todo:
-  add scaling factors
-  reverse()
-  mirror()
-  pop/push
-  move
 */
 
+
+ci=17;
+k=1;
+
+width=0.2;
+scale= 1.5;
+align=0;
+
+$fn=12;
 
 function find(key, list) =
       list[search([key],list)[0]]  ;
 
-function is_key(key,list)= find(key,list) != undef;
-
-function rstr(list,i=0,s="") =
-   i < len(list)
-      ? rstr(list,i+1,str(s,list[i]))
+function join(l,s="",i=0) =
+   i <len(l) 
+      ? join(l,str(s,l[i]),i+1)
       : s;
       
 function replace(s,rules) =
-   rstr([for (c = s)
+   join([for (c = s)
       let(r=find(c,rules)[1])
-      is_undef(r) ? c : r
+      r==undef ? c : r
    ]);
       
-function gen(axiom,rules,k) =
-    k==0? axiom : gen(replace(axiom,rules),rules,k-1);
+function gen(s,rules,k) =
+    k==0? s : gen(replace(s,rules),rules,k-1);
 
-
-function string_to_points(s,step=1,angle=90,pos=[0,0,0],dir=0,forward) =
-  let(fchars = is_undef(forward) ? ["F"] : forward)
+function string_to_points(s,step=1,angle=90,pos=[0,0],dir=0) =
   [for( i  = 0,
         ps = [pos];
 
         i <= len(s);
 
         c   = s[i],
-        pos = is_key(c,fchars)
-               ? pos + step*[cos(dir), sin(dir),0]
+        pos = c=="F" ||c=="A" || c=="B"
+               ? pos + step*[cos(dir), sin(dir)]
                : pos,
         dir = c=="+"  
               ? dir + angle
               : c=="-"
                 ? dir - angle
                 : dir,
-        ps  = is_key(c,fchars) 
+        ps  = c=="F" ||c=="A" || c=="B"
                ? concat([pos], ps) : ps,
         i   = i+1 )
   
         if(i==len(s)) each ps ];
+
 
 // workaround to avoid range limit         
 function to_n(n) = [for (i=0;i<=n;i=i+1) i];
@@ -83,219 +83,28 @@ module path(points,width,closed=false) {
       } 
     }
 };
-
-module path_fill(points) {
-   for (i=to_n(len(points)-1)) 
-      translate(points[i])
-         children(i % $children);   
-};
-
-module path_fill_color(points,colors) {
-   for (i=to_n(len(points)-1)) 
-      translate(points[i])
-         color(colors[i%len(colors)]) children();   
-};
-
-module tile(points) {
-    polygon(points);    
-} 
-
 /* curve directory entry structure
    0 - name
    1 - axiom
    2 - rules
    3 - angle in degrees
-   4 - forward characters - default F
-   5 - scaling between generations
-   6 - closed: true,  open:false
 */
-curves =
-
- [
-   ["Dragon Curve",
-// https://en.wikipedia.org/wiki/Dragon_curve
+curves =[
+   ["Dragon",
    "FX",
    [
      ["X","X+YF+"],
      ["Y","-FX-Y"]
    ],
-   90,
-   ["F"],
-   1.5,
-   false],
+   90],
 
-// doesnt work
-   ["Dragon Curve: 2",   // simpler form
-     "F",
-    [
-     ["F", "F-A"],
-     ["A","F+A"]
-     ],
-     90,
-     ["F","A"],
-     1.5,
-     false
-   ],
-   ["Dragon Curve: 3",
-   // http://larryriddle.agnesscott.org/ifs/heighway/heighway.htm
-       "FX",
-       [["F",""],
-        ["X","+FX--FY+"],
-        ["Y","-FX++FY-"]
-       ],
-       45,
-       ["F"],
-       1,
-       false
-      ],
-             
-   ["Twin Dragon",
-   "FX+FX+",
-   [
-     ["X","X+YF"],
-     ["Y","FX-Y"]
-   ],
-   90,
-   ["F"],
-   1.5,
-   false],
-   
-   ["Terdragon",
-   "F",
-   [
-     ["F","F+F-F"]
-   ],
-   120,
-   ["F"],
-   1.75,
-   false],
-   
-   ["Terdragon Boundary",
-     "A-B--A-B--",
-    [["A","A+B"],
-     ["B","A-B"]
-     ],
-     60,
-     ["A","B"],
-     1.75,
-     true
-     ],
-     
-   ["McWorter's Pentigree",
-    "F",
-    [["F","+F++F----F--F++F++F-"]],
-     36,
-     ["F"],
-     1,
-     false
-     ],
-
-    ["Fudgeflake",
-     "FX++++FX++++FX",
-    [["X","-FY++FX-"],
-     ["Y","+FY--FX+"]
-    ],
-     30,
-     ["F"],
-     1,
-     true],
-   
    ["Moore",
     "LFL+F+LFL",
     [
      ["L","-RF+LFL+FR-"],
      ["R","+LF-RFR-FL+"]
     ],
-    90,
-    ["F"],
-    1,
-    true],
-        
-   ["Hilbert",
-     "X",
-     [
-       ["X","-YF+XFX+FY-"],
-       ["Y","+XF-YFY-FX+"]
-     ],
-     90,
-     ["F"],
-     1,
-     false
-     ],
-     
-   ["Gosper Curve",
-  // Flowsnake, Peano-Gosper Curve
-      "A",
-     [
-       ["A","A-B--B+A++AA+B-"],
-       ["B","+A-BB--B-A++A+B"]
-      ],
-     60,
-     ["A","B"],
-     1,
-     false
-    ],
-    ["Inner-flip Gosper",
-      "A",
-     [
-       ["A","A-FB--FB-F++AF++A-F+AF+B-"],
-       ["B","+A-FB-F+B--FB--F+AF++AF+B"]
-      ],
-     60,
-     ["F"],
-     1,
-     false
-     
-   ],    
-   ["Peano Curve",
-       "X",
-       [
-        ["X","XFYFX+F+YFXFY-F-XFYFX"],
-        ["Y","YFXFY-F-XFYFX+F+YFXFY"]
-       ],
-       90,
-       ["F"],
-       1,
-       false],
-    ["Peano Curve Octagonal",   // https://tecnoloxia.org/100hex/product/peano-curve/
-    //  smooth for curved path
-      "FX",
-      [["F",""],
-       ["X","FX-FY-FX+FY+FX+FY+FX+FY+FX-FY-FX-FY-FX-FY-FX+FY+FX"],
-       ["Y","FY"]
-       ],
-       45,
-       ["F"],
-       1,
-       false
-    ],
-    
-   ["Peano Curve Variation",  // https://tecnoloxia.org/100hex/product/peano-variacion/
-     "F",
-     [
-      ["F","F+F-F-F-G+F+F+F-F"],["G","FFF"]],
-      90,
-      ["F"],
-       1,
-       false],
-     
-   ["Sierpinski Curve",
-         "F--XF--F--XF",
-         [["X", "XF+F+XF--F--XF+F+X"]],
-         45,
-         ["F"] ,
-         2.1,
-         true],
-         
-   ["Sierpinski Curve Rounded",
-     "X--F--X--F",
-     [["X","+Y-F-Y+"],
-      ["Y","-X+F+X-"]],
-     45,
-     ["F"],
-     1.45,
-     true
-    ],  
+    90],
     
    ["Sierpinski Arrowhead",
      "A",
@@ -303,144 +112,74 @@ curves =
        ["A", "B-A-B"],
        ["B","A+B+A"]
      ],
-    60,
-     ["A","B"],
-     1,
-     false],
-     
-   ["Sierpinski Arrowhead Hex",
-     // even iterations star, odd iterations filled hex
-     "A-A-A-A-A-A",
-     [
-       ["A", "B-A-B"],
-       ["B","A+B+A"]
-     ],
-     60,
-     ["A","B"],
-     1,
-     true],
-     
-     ["Sierpinski Arrowhead Anti-Hex",
-     // odd iterations star, even iterations filled hex
-     "A+A+A+A+A+A",
-     [
-       ["A", "B-A-B"],
-       ["B","A+B+A"]
-     ],
-    60,
-     ["A","B"],
-     1,
-     true],
-     
+    60],
     
-       
-   ["Sierpinski Triangle",
+   ["Hilbert",
+     "X",
+     [
+       ["X","-YF+XFX+FY-"],
+       ["Y","+XF-YFY-FX+"]
+     ],
+     90],
+     
+   ["Peano-Gosper",
+      "A",
+     [
+       ["A","A-B--B+A++AA+B-"],
+       ["B","+A-BB--B-A++A+B"]
+      ],
+     60],
+    
+   ["Sierpinski triangle",
       "A-B-B",
       [
         ["A","A-B+A+B-A"],
         ["B","BB"]
       ],
-     120,
-     ["A","B"],
-     1,
-     true],
+      120],
+      
+   ["Peano",
+       "X",
+       [
+        ["X","XFYFX+F+YFXFY-F-XFYFX"],
+        ["Y","YFXFY-F-XFYFX+F+YFXFY"]
+       ],
+       90],
+ 
+   ["Koch snowflake",
+       "F++F++F",
+       [["F","F-F++F-F"]],
+       60],
 
-// done to here
-
-   ["Sierpinski Square", 
+   ["Square Sierpinski", 
         "F+XF+F+XF",
         [["X","XF-F+F-XF+F+XF-F+F-X"]],
-       90,
-       ["F"],
-       1,
-       true],
-       
-   ["Levy Curve",
-         "F",
-         [["F","-F++F-"]],
-         45,
-         ["F"],
-         1,
-         false
-         ],
- 
-   ["Cesaro Curve",
+       90],
+
+   ["Cesaro fractal",
        "F",
        [["F","F+F--F+F"]],
-       85,
-       ["F"],
-        1,
-       false],
+       85],
        
-   ["Minkowski Sausage", 
-    // Also Paul Bourke 1, Quadratic Koch Island
+   ["Paul Bourke 1",
        "F+F+F+F+",
        [["F","F+F-F-FF+F+F-F"]],
-       90,
-       ["F"],
-       1,
-       true],
+       90],
        
    ["Paul Bourke Triangle",
         "F+F+F",
         [["F","F-F+F"]],
         120],
- 
-   ["Koch Snowflake",
-       "F++F++F",
-       [["F","F-F++F-F"]],
-       60],
-       
-   ["Koch Anti-snowflake",
-       "F++F++F",
-       [["F","F+F--F+F"]],
-       60],
-      
-    ["Koch Square",
-       "F--F--F--F--",
-       [["F","F+F--F+F"]],
-       45],
-       
-    ["Anti Koch Square",
-       "F--F--F--F--",
-       [["F","F-F++F-F"]],
-       45],
-
-   ["ABP Koch A",
-         "F+F+F+F",
-         [["F","FF+F+F+F+F+F-F"]],
-        90],
- 
-   ["ABP Koch B",
-         "F+F+F+F",
-         [["F","FF+F+F+F+FF"]],
-        90],
         
-   ["ABP Koch C",
-         "F+F+F+F",
-         [["F","FF+F-F+F+FF"]],
-        90],
-  
-   ["ABP Koch D",
+   ["Paul Bourke Crystal",
          "F+F+F+F",
          [["F","FF+F++F+F"]],
         90],
- 
-   ["ABP Koch E",
-         "F+F+F+F",
-         [["F","F+FF++F+F"]],
-        90],
         
-   ["ABP Koch f",
-         "F+F+F+F",
-         [["F","F+F-F+F+F"]],
-        90],
-    
-    ["Mandle6",
-     "F+F+F+F+F+F+",
-     [["F","F-F+F-F+F"]],
-     60
-     ],
+   ["Levy Curve",
+         "F",
+         [["F","-F++F-"]],
+         45],
          
    ["5-rep-tile",
       "F-F-F-F-",
@@ -449,90 +188,49 @@ curves =
     ],
    
    ["7-rep-tile",
-   // also Gosper island (boundary of flowsnake
       "F-F-F-F-F-F-",
       [["F","F+F-F"]],
       60
     ],
-    ["Quadratic Gosper",
-       "-YF",
-       [["Y","+FXFX-YF-YF+FX+FXYF+FX-YFYF-FX-YF+FXYFYF-FX-YFFX+FX+YF-YF-FX+FX+YFY"],
-       ["X","XFX-YF-YF+FX+FX-YF-YFFX+YF+FXFXYF-FX+YF+FXFX+YF-FXYF-YF-FX+FX+YFYF-"]],
-       
-       90,
-       ["F"],
-        1,
-        false ],
-     
-    ["Anklets of Krishna",
-        "-X--X",
-        [["X","XFX--XFX"]],
-        45 ,   //45.02 splits it down a diagonal
-        ["F"],
-        1,
-        true  
-     ],
-     
-     ["Bourke Kolem",
-       "--D--D",
-        [["X","F++FFFF--F--FFFF++F++FFFF--F"],
-        ["Y","F--FFFF++F++FFFF--F--FFFF++F"],
-        ["C","YFX--YFX"],
-        ["D","CFC--CFC"]],
-        45
-      ],
-     ["Greek Cross",
-         "F",
-         [["F", "FF+F+F+FF+F+F-F"]],
-         90],
-     ["Plus Square",
-     // by 100hex
-       "XYXYXYX+XYXYXYX+XYXYXYX+XYXYXYX+",         
-       [["X", "FX+FX+FXFY-FY-"],
-           ["Y", "+FX+FXFY-FY-FY"],
-           ["F",""]],
-         90],
-     ["100hex maple leaf",
-      "F",
-      [["F", "F-F+F+FF-F-F+FF"]],
-      120
-     ],
-     ["Burke1",
-     "F+F+FF+F+",
-     [["F","F+F-F-FF+F+F-F"]],
-     90]
-  ];
-   
-function curves(i) = curves[i];
-function all_curves() = curves;
-function curve_named(s) = find(s,curves);
+    
+   ["Kolem",
+   "--D--D",
+   [["X","F++FFFF--F--FFFF++F++FFFF--F"],
+    ["Y","F--FFFF++F++FFFF--F--FFFF++F"],
+    ["C","YFX--YFX"],
+    ["D","CFC--CFC"]],
+    45
+   ],
+    ["Bourke Simple",
+      "F-F-F-F-",
+      [["F","F-F+F+FF-F-F+F"]],
+    90
+    ]
+   ];
 
-function curve_name(c) = c[0];
-function curve_axiom(c) = c[1];
-function curve_rules(c) = c[2];
-function curve_angle(c) = c[3];
-function curve_forward(c) = c[4];
-function curve_factor(c) = c[5];
+for (i=[0:len( curves)-1])
+    echo(i,curves[i][0]); 
 
-module curve_index() { 
-  for (c=curves)
-    echo(c); 
-};
+curve=curves[ci];
+echo(curve);
+echo("k",k);
 
-module frame(x,y,r) {
-   hull() {
-       translate([-x/2+r,-y/2+r]) circle(r);
-       translate([x/2-r,-y/2+r]) circle(r);
-       translate([x/2-r,y/2-r]) circle(r);
-       translate([-x/2+r,y/2-r]) circle(r);       
-   }
-}
+name=curve[0];
+axiom=curve[1];
+rules=curve[2];
+angle=curve[3];
 
-module print_curve(curve) {
-     echo("name:",curve[0]);
-     echo("axiom:",curve[1]);  
-     echo("rules:",curve[2]);  
-     echo("angle:",curve[3]);  
-     echo("forward chars:",curve[4]);  
-     echo("factor:",curve[5]);
-};
+sentence=gen(axiom,rules,k);
+//echo(sentence);
+echo("sentence length",len(sentence));
+
+points = string_to_points(sentence,step=1,angle=angle);
+//echo(points);
+echo("curve length", len(points)-1);
+
+rotate([0,0,align])
+  color("red")
+  scale(scale)
+    path(centre_tile(points),width=width);
+
+// fill_tile(centre_tile(points));
