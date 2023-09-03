@@ -4,7 +4,7 @@ use <lsystem-23.scad>
 /*
   example script using the lsystem library
 
-  to generate a order 4 flowsnake which is used to create a 2-d objects by hulling the points . 
+  to generate a order 4 flowsnake which is used to create a 2-d object by hulling circles centered on the points . 
   
   This path is the removed from a circle and the DXF code exported to laser cut a grill for a VHF spreaker 
 */
