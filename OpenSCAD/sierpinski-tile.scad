@@ -1,5 +1,5 @@
-use <../lib/tile.scad>
-use <../lib/lsystem-23.scad>
+use <tile.scad>
+use <lsystem-23.scad>
 
 /*
   example script using the lsystem library
