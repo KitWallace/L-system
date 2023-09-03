@@ -306,10 +306,10 @@ function curves() =
        2+2*cos(45)],
    ];
 
-function get_lsystem(i) = curves()[i];
+function curve(i) = curves()[i];
 
 function l_system(i,k=1,step=1) =
-  let(curve=get_lsystem(i))
+  let(curve=curve(i))
   let(name=curve[0])
   let(axiom=curve[1])
   let(rules=curve[2])
