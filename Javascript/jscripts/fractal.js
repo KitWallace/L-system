@@ -1,13 +1,60 @@
 /* 
  * 
  * 
- *  change to generating turtle (which can be output for interface to Turtle tool) and then interpreting the turtle code
+ * This version implements the following L-system operators
  * 
- * -  issue with closing paths - moore has step missing 
- * -  successive turns need amalgamating to a single turn
+ *     F (or a defined set of symbols) - draw line 
+ *     f  move without drawing
+ *     + left rurn
+ *     - right turn
+ *     [ push state  
+ *     ] pop state  ( and move to the restored position
+ *     >  multiple step length by scale factor
+ *     < divide step length by scale factor 
  * 
+ *     stocastic paths with multiple replacement strings and probability
+ * 
+ *     Several designs form 'The Algorithmic Beity of Plants' which use these extended features added 
+ * 
+ 
  */
  
+ function point_add(a, b) {
+    return[b[0] + a[0], b[1] + a[1],b[2] +a[2]];
+ }
+ 
+ function path_translate(path, p) {
+    return path.map(function (v, i) {
+        return point_add(v, p);
+    });
+}
+
+function path_scale(path, s) {
+    if (Array.isArray(s))
+    return path.map(function (v, i) {
+        return[s[0] * v[0], s[1] * v[1], v[2]];
+    }); else
+    return path.map(function (v, i) {
+        return[s * v[0], s * v[1], s* v[2]];
+    });
+}
+ function svg_points(points, closed) {
+    s="";
+    for (var i = 0; i < points.length; i++) {
+        p = points[i];
+        s += (p[2]== 0 ? " M " :" L ") + p[0] + "," + p[1];
+    }
+    if (closed) s += " L " + points[0][0] + "," + points[0][1];
+    return s;
+}
+
+function svg_path(path, style) {
+    var svg = "<path d='" + path + "' ";
+    svg += " style='" + style;
+    svg += "'/>";
+    return svg;
+}
+
 var fr;
 
 function select_fractal() {
@@ -68,14 +115,33 @@ function find_rule(c,rules) {
     return -1;
 }
 
+function select_rule(rules,p) {
+   var replacement;
+   var cumulative = 0;
+   for (var i=0;i<rules.length;i++) {
+       var rule = rules[i];
+       if (p >= cumulative  && p < cumulative + rule[1]) {
+          replacement=rule[0];
+          break;
+       }
+       else cumulative += rule[1];
+   }
+   return replacement;   
+}
+
 function fractal_replace(s,rules) {
     var ns="";
     for (var i = 0;i < s.length; i++){
         var c= s[i];
-        var r=find_rule(c,rules);
-        if (r  == -1)
+        var replacement=find_rule(c,rules);
+        if (replacement  == -1)
             ns+=c; 
-        else ns+=r;
+        else if (Array.isArray(replacement)) {
+            p = Math.random();
+            ns+= select_rule(replacement,p)       
+        }      
+        else 
+            ns+=replacement;
     }
     return ns;
 }
@@ -114,74 +180,73 @@ class Fractal_curve {
        for (var i = 0;i<k; i++) {
            s = fractal_replace(s,this.rules);
        }
+
        return s;
     }
-    
+     
     string_to_points(s) {
        var forward_chars = this.forward_chars  ? this.forward_chars : ["F"] 
        var pos = [0,0];
-       var dir=0;
+       var dir=-90;
+       var stack = [];
+       var state ;
        var step=1;
-       var points=[pos];
+       var scale_factor =0.75;
+       var points=[[pos[0],pos[1],0]];   // 0 is move
 
        for (var i = 0;i < s.length;i++) {
            var c = s[i];         
            if (forward_chars.indexOf(c) > -1) {
               pos =  point_add(pos, [step * cos(dir),step * sin(dir)]);
-              points.push(pos);
+              points.push([pos[0],pos[1],1]);  // 1 is draw
            }
+            else if (c=="f") {
+              pos =  point_add(pos, [step * cos(dir),step * sin(dir)]);
+              points.push([pos[0],pos[1],0]);  // 01 is movr               
+            }
             else if (c=="+")
               dir= dir - this.angle;
             else if (c=="-")
               dir= dir + this.angle;  
- //           console.log(pos,dir);
-       }       
+            else if (c==">")
+               step = step* scale_factor;
+           else if (c=="<")
+               step = step / scale_factor;
+            else if (c=="[") {
+               state = [pos,dir,step];
+               stack.push(state);
+               }
+            else if (c=="]") {
+               state = stack.pop();
+               pos = state[0];
+               dir = state[1];
+               step=state[2];
+               points.push([pos[0],pos[1],0]); // 0 is move
+             }
+       }  
        return points;
     }
 
-   string_to_turtle(s) {
-       var forward_chars = this.forward_chars  ? this.forward_chars : ["F"] 
-       var t= [];
-
-       for (var i = 0;i < s.length;i++) {
-           var c = s[i];         
-           if (forward_chars.indexOf(c) > -1) {
-              var step ="F 20";
-              t.push(step);
-           }
-           else if (c=="+") {
-              var step = "L " + this.angle;
-              t.push(step);
-           }
-            else if (c=="-"){
-              var step ="R " + this.angle;
-              t.push(step);
-           }
-       }       
-       return t.join();
-    }
-
     make_fractal(generations)  {
-        console.log("fractal",this);
+//        console.log("fractal",this);
         var eps = 0.01;
         var s = this.make_string(generations);
-        console.log("s",s);
+//        console.log("s",s);
         var points = this.string_to_points(s);
-        console.log("points",points);
-        var turtle =this.string_to_turtle(s);
-        console.log("turtle", JSON.stringify(turtle));
+//        console.log("points",points);
 /*         if (this.closed  && norm(point_diff(points[0],points[points.length-1])) < eps )
           points.pop;
 
         console.log("after pop",points);
-*/        var box = bounding_box(points);
+*/      
+        var box = bounding_box(points);
+ //       console.log("BB",box);
         var width = box[1]-box[0];
         var height = box[3]-box[2];
         var centre = [box[0]+width/2,box[2]+height/2];
-    
-        points = path_translate(points, [-centre[0],-centre[1]]);
+       
+        points = path_translate(points, [-centre[0],-centre[1],0]);
         points = path_scale (points,5 / Math.max(width,height));
- 
         return points;
     }
 }
@@ -195,7 +260,7 @@ function refresh() {
     var points = fr.make_fractal(gen);
     points = path_scale(points,scale);
     $('#n-points').text(points.length);
-    console.log(fr);
+//    console.log(fr);
     $('#points').text(JSON.stringify(path_toFixed(points,5)));
     make_svg(fr,points);
 }
@@ -209,7 +274,7 @@ function make_svg(fractal,points) {
    var w=screen_scale * bed_width/2;
    var h =screen_scale * bed_height/2;
    var box = [[-w,-h], [w,h]];
-   var box_path= [[-w,-h],[w,-h],[w,h],[-w,h]];
+   var box_path= [[-w,-h,0],[w,-h,1],[w,h,1],[-w,h,1]];
 
 //   box = bounding_box(points);
    padding=20;
@@ -224,13 +289,14 @@ function make_svg(fractal,points) {
 //  alert(transform);
    canvas.attr("transform", transform);
    canvas.append("<title>"+$('#fname').text()+"</title>");
-
-   
-   canvas.append(svg_path(svg_points(box_path,true),"fill: none; stroke:black; stroke-width:3;"));  
-   
+   var path = svg_path(svg_points(box_path,true),"fill: none; stroke:black; stroke-width:3;");
+ //  console.log(path);
+   canvas.append(path);
    
    points = path_scale(points,screen_scale*10);  
-   canvas.append(svg_path(svg_points(points,fractal.closed),"fill: none; stroke:blue; stroke-width:2;"));
+   path = svg_path(svg_points(points,fractal.closed),"fill: none; stroke:blue; stroke-width:2;");
+ //  console.log(path);
+   canvas.append(path);
 
    $("#svgframe").html($('#svgframe').html());  
 }
