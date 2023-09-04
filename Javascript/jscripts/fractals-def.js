@@ -153,7 +153,14 @@ var Fractal_curves=
          45,
          ["F"] ,
          true],
+      ["Sierpinski Curve stocastic",
+         "F--XF--F--X",
+         [["X", [["XF+F+XF--F--XF+F+X",0.5],["XF+F+XF+F+XF",0.5]]]],
+         45,
+         ["F"] ,
+         false],
          
+     
    ["Sierpinski Curve Rounded",
      "X--F--X--",
      [["X","+Y-F-Y+"],
@@ -378,5 +385,44 @@ var Fractal_curves=
      ["LSystemBot2",
      "FL",
      [["F","FFFFF+"],["L","L+"]],
-     45,,true]
+     45,,true],
+     
+     ["Fern",
+      "X",
+      [["F","FF"],
+       ["X","F-[[X]+X]+F[+FX]-X"]
+       ],
+      22.5,
+      "F"],
+      ["Tree",
+      "F",
+      [["F","FF+[+F-F-F]-[-F+F+F]"]],
+      22.5 
+      ],
+      ["Fan",
+      "FX",
+      [["X",">[-FX]+FX"]],
+      40
+      ],
+      ["Snake Golem",
+      "F+XF+F+XF",
+      [["X","X{F-F-F}+XF+F+X{F-F-F}+X" ]],
+      90],
+      ["ABP-25-a",
+      "F",
+      [["F","F[+F]F[-F]F"]],
+      25.7
+      ],
+      ["ABP-25-d",
+      "X",
+      [["X","F[+X]F[-X]+X"],
+       ["F","FF"]],
+      20
+      ],
+      ["ABP-26",
+      "F",
+      [["F",[["F[+F]F[-]F",0.33],["F[+F]F",0.33],["F[-F]F",0.34]]]],
+     40
+      ]
+      
   ];
