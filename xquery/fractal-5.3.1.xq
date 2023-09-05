@@ -60,7 +60,7 @@ declare function local:symbols-to-points($fractal,$symbols,$pos,$dir,$i,$points)
     else
       let $step := $symbols[$i]
       let $new-pos := 
-            if ($step="F")
+            if (contains($fractal/forward-symbols,$step))
             then 
               let $dir-rad := local:radians($dir)
               return
