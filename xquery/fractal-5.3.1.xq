@@ -1,7 +1,7 @@
 xquery version "3.1";
 declare variable $local:fractals := doc("fractals.xml")//fractal;
 declare function local:radians($d) {
-    $d * math:pi() div 180
+    $d * math:pi() div 180.0
 };
 
 declare function local:index() {
